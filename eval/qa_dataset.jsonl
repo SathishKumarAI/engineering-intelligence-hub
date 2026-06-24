@@ -1,0 +1,10 @@
+{"question": "What is the default API rate limit per key?", "expected_answer": "120 requests per minute per API key.", "expected_source": "rfc_0001_rate_limiting.md"}
+{"question": "What status code is returned when the rate limit is exceeded?", "expected_answer": "HTTP 429 with a Retry-After header.", "expected_source": "rfc_0001_rate_limiting.md"}
+{"question": "How are unauthenticated requests rate limited?", "expected_answer": "By client IP at half the authenticated rate.", "expected_source": "rfc_0001_rate_limiting.md"}
+{"question": "How do I roll back the most recent deploy?", "expected_answer": "kubectl rollout undo deploy/api.", "expected_source": "runbook_deploy_rollback.md"}
+{"question": "How do I roll back to a specific revision?", "expected_answer": "kubectl rollout undo deploy/api --to-revision=<n>.", "expected_source": "runbook_deploy_rollback.md"}
+{"question": "Which database was chosen as the primary datastore and why?", "expected_answer": "PostgreSQL, for strong consistency and relational/multi-row transactions.", "expected_source": "adr_0007_postgres.md"}
+{"question": "Why was a document database rejected?", "expected_answer": "Access patterns are relational and need multi-row transactions.", "expected_source": "adr_0007_postgres.md"}
+{"question": "How long are auth tokens valid?", "expected_answer": "30 minutes; refresh via POST /v1/auth/refresh.", "expected_source": "api_reference.md"}
+{"question": "What is the maximum page size for list endpoints?", "expected_answer": "100 (via ?limit=).", "expected_source": "api_reference.md"}
+{"question": "What should a client do on a 5xx error?", "expected_answer": "Retry with exponential backoff.", "expected_source": "api_reference.md"}

@@ -2,12 +2,12 @@
 
 ## Summary
 Extract text from image files and scanned (image-only) PDFs during ingestion using a
-fully local Tesseract stack, so photographed decks and scanned filings become
+fully local Tesseract stack, so photographed diagrams and scanned runbooks become
 searchable alongside born-digital documents.
 
 ## Problem / why
-Due-diligence material arrives as scans and screenshots — a photographed term sheet, a
-faxed 10-K, a slide exported as PNG. `PyPDFLoader` reads none of that (no text layer),
+Engineering docs arrive as scans and screenshots — a photographed architecture diagram, a
+scanned runbook, a slide exported as PNG. `PyPDFLoader` reads none of that (no text layer),
 so those documents are invisible to retrieval. Local OCR recovers the text without any
 cloud call or API key.
 

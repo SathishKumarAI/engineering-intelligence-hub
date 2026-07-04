@@ -2,13 +2,13 @@
 
 ## Summary
 Combine lexical (BM25) and semantic (dense vector) retrieval and fuse the two
-ranked lists with Reciprocal Rank Fusion (RRF), so exact figures, tickers, and
-codes are recalled as well as paraphrased concepts.
+ranked lists with Reciprocal Rank Fusion (RRF), so exact identifiers, error codes,
+and config keys are recalled as well as paraphrased concepts.
 
 ## Problem / why
-Dense-only retrieval misses exact-string matches (e.g. "$12.4M", "Section 4(a)",
-a fund name) when the embedding blurs them. BM25 nails those but misses paraphrase.
-Fusing both lifts recall on the figure/code questions investors actually ask.
+Dense-only retrieval misses exact-string matches (e.g. "HTTP 429", "RATE_LIMIT_RPS",
+a service name) when the embedding blurs them. BM25 nails those but misses paraphrase.
+Fusing both lifts recall on the identifier/code questions engineers actually ask.
 
 ## Users & context
 Internal to the RAG engine on every `/v1/ask`. No API surface change beyond an

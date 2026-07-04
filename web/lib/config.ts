@@ -1,8 +1,10 @@
 // Domain config — the only file that changes between the three projects.
 export const siteConfig = {
   name: "Engineering Intelligence Hub",
+  shortName: "Engineering Hub",
   tagline:
     "Ask questions about your engineering docs (RFCs, runbooks, ADRs, API refs). Every answer cites the source.",
+  domainLabel: "Software Engineering",
   accent: "#4f46e5", // indigo
   disclaimer:
     "Answers reflect the indexed docs — verify against the live system. Sample data is synthetic.",

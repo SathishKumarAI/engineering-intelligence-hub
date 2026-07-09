@@ -22,7 +22,7 @@
   --border: #e5e8f0;
   --text: #0f172a;
   --text-muted: #64748b;
-  --accent: #4f46e5;
+  --accent: #d97706;
 }
 
 .dark {
@@ -32,7 +32,7 @@
   --border: #283149;
   --text: #e8ebf5;
   --text-muted: #94a0bd;
-  --accent: #818cf8;
+  --accent: #fbbf24;
 }
 
 @layer base {

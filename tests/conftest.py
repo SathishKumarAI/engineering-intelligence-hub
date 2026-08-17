@@ -3,6 +3,7 @@
 These let the whole RAG path run in CI with no model downloads and no network —
 the provider seam (Embeddings / BaseChatModel) is exactly what we substitute.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -51,12 +52,18 @@ class FakeChat:
 @pytest.fixture
 def sample_docs() -> list[Document]:
     return [
-        Document(page_content="Default API rate limit is 120 requests per minute",
-                 metadata={"source": "rfc.md", "page": None}),
-        Document(page_content="Roll back a deploy with kubectl rollout undo",
-                 metadata={"source": "runbook.md", "page": None}),
-        Document(page_content="Primary datastore is PostgreSQL for relational transactions",
-                 metadata={"source": "adr.md", "page": None}),
+        Document(
+            page_content="Default API rate limit is 120 requests per minute",
+            metadata={"source": "rfc.md", "page": None},
+        ),
+        Document(
+            page_content="Roll back a deploy with kubectl rollout undo",
+            metadata={"source": "runbook.md", "page": None},
+        ),
+        Document(
+            page_content="Primary datastore is PostgreSQL for relational transactions",
+            metadata={"source": "adr.md", "page": None},
+        ),
     ]
 
 
@@ -76,3 +83,21 @@ def fake_engine(fake_store):
     from app.rag import RagEngine
 
     return RagEngine(fake_store, FakeChat(), top_k=3, provider="fake")
+
+
+@pytest.fixture
+def client(monkeypatch, fake_engine):
+    """TestClient wired to the fake engine, shared by every API-level test module.
+
+    Stops the real engine being built in lifespan, which would download an embedding
+    model and make the suite neither offline nor fast.
+    """
+    from fastapi.testclient import TestClient
+
+    import app.main as main
+
+    monkeypatch.setattr(main, "build_engine", lambda: fake_engine)
+    main.app.dependency_overrides[main.get_engine] = lambda: fake_engine
+    with TestClient(main.app) as c:
+        yield c
+    main.app.dependency_overrides.clear()

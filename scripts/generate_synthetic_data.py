@@ -10,6 +10,7 @@ Usage:
 
 Deterministic given a seed: no LLM, no network — templates + a seeded RNG.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -47,9 +48,9 @@ the gateway so individual services don't each reimplement throttling.
 
 
 def runbook_deploy(rng: random.Random) -> tuple[str, str]:
-    body = """# Runbook: Deploy and Rollback (synthetic sample)
+    body = f"""# Runbook: Deploy and Rollback (synthetic sample)
 
-{disc}
+{DISCLAIMER}
 ## Deploy
 1. Merge to `main`; CI builds and pushes the image tagged with the commit SHA.
 2. `kubectl set image deploy/api api=registry/api:<sha>`.
@@ -63,14 +64,14 @@ def runbook_deploy(rng: random.Random) -> tuple[str, str]:
 ## Health
 - Liveness: `GET /health`. Readiness: `GET /ready`.
 - If readiness fails after rollback, check the database migration state before retrying.
-""".format(disc=DISCLAIMER)
+"""
     return "runbook_deploy_rollback.md", body
 
 
 def adr_database(rng: random.Random) -> tuple[str, str]:
-    body = """# ADR-0007: Use PostgreSQL as the primary datastore (synthetic sample)
+    body = f"""# ADR-0007: Use PostgreSQL as the primary datastore (synthetic sample)
 
-{disc}
+{DISCLAIMER}
 ## Status
 Accepted.
 
@@ -89,7 +90,7 @@ and point-in-time recovery.
 ## Consequences
 - Schema migrations are required and run in CI before deploy.
 - Read replicas can be added later for read-heavy endpoints.
-""".format(disc=DISCLAIMER)
+"""
     return "adr_0007_postgres.md", body
 
 

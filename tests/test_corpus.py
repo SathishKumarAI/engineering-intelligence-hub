@@ -50,8 +50,11 @@ def test_query_entries_parses_and_skips_incomplete(monkeypatch):
 
 def test_render_contains_key_fields():
     entry = {
-        "id": "2401.01234", "title": "A Systems Paper", "abstract": "Body.",
-        "published": "2024-01-02T00:00:00Z", "url": "https://arxiv.org/abs/2401.01234",
+        "id": "2401.01234",
+        "title": "A Systems Paper",
+        "abstract": "Body.",
+        "published": "2024-01-02T00:00:00Z",
+        "url": "https://arxiv.org/abs/2401.01234",
     }
     out = fetch_corpus.render(entry)
     assert "# A Systems Paper" in out

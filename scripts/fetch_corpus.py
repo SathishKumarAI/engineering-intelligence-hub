@@ -30,6 +30,7 @@ from __future__ import annotations
 import argparse
 import os
 import re
+import sys
 import time
 import urllib.error
 import urllib.parse
@@ -100,9 +101,7 @@ def query_entries(search_query: str, max_results: int) -> list[dict[str, str]]:
             continue
         title = _clean(e.findtext("atom:title", default="", namespaces=ATOM_NS) or "")
         abstract = _clean(e.findtext("atom:summary", default="", namespaces=ATOM_NS) or "")
-        published = (
-            e.findtext("atom:published", default="", namespaces=ATOM_NS) or ""
-        ).strip()
+        published = (e.findtext("atom:published", default="", namespaces=ATOM_NS) or "").strip()
         if not title or not abstract:
             continue
         entries.append(
@@ -175,7 +174,7 @@ def fetch(limit: int | None, dry_run: bool) -> int:
     return saved
 
 
-def main() -> None:
+def main() -> int:
     ap = argparse.ArgumentParser(
         description="Fetch open engineering corpus (arXiv cs.SE / cs.DC abstracts)."
     )
@@ -183,10 +182,23 @@ def main() -> None:
     ap.add_argument("--dry-run", action="store_true", help="list URLs, download nothing")
     args = ap.parse_args()
     n = fetch(args.limit, args.dry_run)
-    if not args.dry_run:
-        print(f"\nDone. {n} new document(s) in {CORPUS_DIR.relative_to(PROJECT_ROOT)}.")
-        print("Next: python -m app.ingest  (re)builds the index over the new corpus.")
+    if args.dry_run:
+        return 0
+
+    print(f"\nDone. {n} new document(s) in {CORPUS_DIR.relative_to(PROJECT_ROOT)}.")
+    if n == 0:
+        # Previously this printed "Done." and exited 0, so a fetch that downloaded
+        # nothing at all read as success to a human and to any CI step. The SEC fetcher
+        # in the reference repo had the same defect and had never fetched a document.
+        print(
+            "\nNo documents were fetched. Check the warnings above - if every "
+            "request failed, arXiv was unreachable or rejected them.",
+            file=sys.stderr,
+        )
+        return 1
+    print("Next: python -m app.ingest  (re)builds the index over the new corpus.")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

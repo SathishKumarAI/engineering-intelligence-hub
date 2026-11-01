@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ── Design tokens ──────────────────────────────────────────────────────────
-   A calm, trustworthy finance palette: deep indigo brand, slate neutrals.
+   A calm, trustworthy engineering palette: indigo brand, amber accent, slate neutrals.
    Surfaces are driven by CSS variables so light/dark is a single class flip. */
 @theme {
   --color-brand-50: #eef2ff;

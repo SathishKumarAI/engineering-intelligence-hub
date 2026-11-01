@@ -95,7 +95,7 @@ boundary sentence appears in *both* neighbouring chunks, so retrieval can still 
 
 After splitting, `dedupe_chunks()` drops near-duplicates using **Jaccard similarity over
 5-word shingles** (`dedupe_threshold` 0.9) — this kills boilerplate paragraphs that
-repeat across a corpus (e.g. legal disclaimers on every filing).
+repeat across a corpus (e.g. licence headers on every source file).
 
 ### 4. Embedding (bge-small / Voyage)
 
@@ -197,10 +197,10 @@ with it off, it fetches exactly `top_k`.
 `_format_context()` numbers each surviving chunk and stamps its source:
 
 ```
-[1] (source: aapl_10k.txt, p.12)
+[1] (source: rfc_0001_rate_limiting.md, p.12)
 <chunk text>
 
-[2] (source: term_sheet.pdf, p.3)
+[2] (source: runbook_deploy_rollback.pdf, p.3)
 <chunk text>
 ```
 
@@ -297,17 +297,17 @@ flowchart TD
 
 ## A worked example
 
-**Question:** *"What are the main risks for this company?"*
+**Question:** *"How do we roll back a bad deploy?"*
 
 | Stage | What happens |
 |---|---|
-| Condense | No history → query stays `"What are the main risks for this company?"` |
-| Tokenize (lexical) | `["what", "are", "the", "main", "risks", "for", "this", "company"]` — BM25 will weight rare terms like `risks` heavily, ignore common ones |
-| Embed | query → vector; Chroma returns chunks near "risk factors", "going concern", "competitive pressure" even without the word *risks* |
-| Fuse (RRF) | dense hits (risk-factor prose) + BM25 hits (chunks literally containing "Risk Factors") merged; a chunk found by both rises to the top |
-| Rerank (if on) | cross-encoder confirms which candidate *answers* the risk question and reorders |
-| Context | top-5 chunks numbered `[1]..[5]` with `(source: aapl_10k.txt, p.8)` labels |
-| Generate | LLM: *"Key risks include supply-chain concentration [2] and FX exposure [4]... Missing: no customer-concentration disclosure — a red flag [1]."* |
+| Condense | No history → query stays `"How do we roll back a bad deploy?"` |
+| Tokenize (lexical) | `["how", "do", "we", "roll", "back", "a", "bad", "deploy"]` — BM25 will weight rare terms like `rollback` heavily, ignore common ones |
+| Embed | query → vector; Chroma returns chunks near "revert the release", "previous image tag", "health check" even without the word *rollback* |
+| Fuse (RRF) | dense hits (rollback-procedure prose) + BM25 hits (chunks literally containing "Rollback") merged; a chunk found by both rises to the top |
+| Rerank (if on) | cross-encoder confirms which candidate *answers* the rollback question and reorders |
+| Context | top-5 chunks numbered `[1]..[5]` with `(source: runbook_deploy_rollback.md, p.8)` labels |
+| Generate | LLM: *"Re-point the deployment at the previous image tag [2] and wait for the health check to pass [4]... Note: schema migrations are not reversible by this procedure [1]."* |
 | Citations | markers `{1,2,4}` → 3 `Citation` objects pointing at those exact chunks |
 
 If the corpus genuinely doesn't cover risks, retrieval returns nothing (or the model
@@ -322,7 +322,7 @@ Everything above is observable. Send `explain: true`:
 
 ```bash
 curl -s localhost:8000/v1/ask -H 'content-type: application/json' \
-  -d '{"question":"What are the main risks for this company?","explain":true}'
+  -d '{"question":"How do we roll back a bad deploy?","explain":true}'
 ```
 
 The response gains a `trace` object (`PipelineTraceModel`, `app/trace.py` / `app/schemas.py`):

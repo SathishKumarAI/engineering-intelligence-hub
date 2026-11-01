@@ -34,7 +34,7 @@ OCR-able images:
 Every extracted page becomes a `langchain_core.documents.Document` stamped with
 `source` (filename), `page`, and `extraction_method`. That metadata rides all the way
 through to citations and the F23 trace, so an answer can tell you a passage came from
-`aapl_10k.txt, p.12` via `ocr`.
+`scanned_schematic.pdf, p.12` via `ocr`.
 
 ---
 
@@ -162,8 +162,8 @@ Same effect as the module, triggered over HTTP (auth + rate-limit guarded).
 Add **one** document to the *live* index without a full rebuild (`add_file_to_store`):
 
 ```bash
-curl -X POST "localhost:8000/v1/upload?filename=term_sheet.pdf" \
-  --data-binary @term_sheet.pdf
+curl -X POST "localhost:8000/v1/upload?filename=architecture_review.pdf" \
+  --data-binary @architecture_review.pdf
 ```
 
 - Body is the **raw file bytes**; `filename` (query param) carries the name (no multipart
